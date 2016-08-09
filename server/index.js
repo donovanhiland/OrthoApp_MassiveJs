@@ -51,7 +51,7 @@ app.use(passport.session());
 
 // GET
 app.get('/logout', UserCtrl.logout);
-app.get('/checkAuth', UserCtrl.checkAuth)
+app.get('/checkAuth', UserCtrl.checkAuth);
 app.get('/me', isAuthed, UserCtrl.me);
 app.get('/users/pending', isAuthed, UserCtrl.getPending);
 app.get('/users/:id', isAdmin, UserCtrl.getUser);
@@ -63,11 +63,11 @@ app.post('/login', passport.authenticate('local', {
     successRedirect: '/me'
 }));
 app.post('/users', UserCtrl.register);
-app.post('/users/search', UserCtrl.getAllUsers)
+app.post('/users/search', UserCtrl.getAllUsers);
 app.post('/payments', isAuthed, PaymentsCtrl.makePayment);
 app.post('/notes', isAuthed, NotesCtrl.createNote, UserCtrl.createNote);
 app.post('/appointments', isAuthed, ApptsCtrl.getAppointments);
-app.post('/schedule', isAuthed, isAdmin, ApptsCtrl.getSchedule)
+app.post('/schedule', isAuthed, isAdmin, ApptsCtrl.getSchedule);
 //cancel appointment
 app.post('/appointments/:id', isAuthed, ApptsCtrl.cancelAppointment, UserCtrl.cancelAppointment);
 
