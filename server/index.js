@@ -1,25 +1,26 @@
 // EXTERNAL MODULES //
-var express = require('express');
-var bodyParser = require('body-parser');
-var cors = require('cors');
-var mongoose = require('mongoose');
-var session = require('express-session');
-var schedule = require('node-schedule');
+import express from 'express';
+import bodyParser from 'body-parser';
+import cors from 'cors';
+import mongoose from 'mongoose';
+import session from 'express-session';
+import schedule from 'node-schedule';
+import massive from 'massive';
 
 // PASSPORT //
-var passport = require('./services/passport');
+import passport from './services/passport';
 
 // CONFIG //
-var config = require('./config');
+import config from './config';
 
 // CONTROLLERS
-var UserCtrl = require('./controllers/UserCtrl');
-var ApptsCtrl = require('./controllers/ApptsCtrl');
-var PaymentsCtrl = require('./controllers/PaymentsCtrl');
-var NotesCtrl = require('./controllers/NotesCtrl');
+import UserCtrl from './controllers/UserCtrl';
+import ApptsCtrl from './controllers/ApptsCtrl';
+import PaymentsCtrl from './controllers/PaymentsCtrl';
+import NotesCtrl from './controllers/NotesCtrl';
 
 // POLICIES //
-var isAuthed = function(req, res, next) {
+let isAuthed = (req, res, next) => {
     if (!req.isAuthenticated()) {
         return res.status(401).json();
     } else {
@@ -27,7 +28,7 @@ var isAuthed = function(req, res, next) {
     }
 };
 
-var isAdmin = function(req, res, next) {
+let isAdmin = (req, res, next) => {
     if (req.user.type !== 'admin') {
         return res.status(401);
     } else {
@@ -35,8 +36,24 @@ var isAdmin = function(req, res, next) {
     }
 };
 
-// EXPRESS //
-var app = express();
+// EXPRESS APP //
+const app = module.exports = express();
+
+// PSQL CONNECTION //
+const massiveInstance = massive.connectSync({
+    connectionString: config.CONNECTIONSTRING,
+    scripts: 'C:\\Users\\Donovan\\WebDev\\Projects\\OrthoApp_MassiveJs\\db'
+    // scripts: './/..//db'
+});
+app.set('db', massiveInstance);
+let db = app.get('db');
+// console.log(db);
+// db.orthotest.find({
+//   // type: 'dog',
+//   'description like': 'scary%'
+// }, function(err, result) {
+//   console.log(result);
+// });
 
 app.use(express.static(__dirname + './../public'));
 app.use(session({
@@ -77,23 +94,18 @@ app.put('/users/:id', isAuthed, UserCtrl.update);
 app.put('/appointments/:id', isAuthed, ApptsCtrl.scheduleAppointment, UserCtrl.me);
 app.put('/notes/:id', isAuthed, NotesCtrl.updateNote);
 
-var createAppointmentsScheduler = schedule.scheduleJob({
-    hour: 00,
-    minute: 01
-}, function() {
-    console.log('time to update');
-    ApptsCtrl.createAppointments();
-});
-ApptsCtrl.createAppointments();
+// let createAppointmentsScheduler = schedule.scheduleJob({
+//     hour: '00',
+//     minute: '01'
+// }, () => {
+//     console.log('time to update');
+//     ApptsCtrl.createAppointments();
+// });
+// ApptsCtrl.createAppointments();
 
 // CONNECTIONS //
-var mongoURI = config.MONGOURI;
-var port = config.PORT;
+const port = config.PORT;
 
-mongoose.connect(mongoURI);
-mongoose.connection.on('error', console.error.bind(console, 'connection error:'));
-mongoose.connection.once('open', function() {
-    app.listen(port, function() {
-        console.log('server started succesfully on port ' + config.PORT);
-    });
+app.listen(port, () => {
+    console.log('server started succesfully on port ' + config.PORT);
 });
