@@ -49,7 +49,7 @@ module.exports = {
         User.find(req.query, function(err, dbRes) {
             if (err) res.status(500).json(err);
             res.status(200).json(dbRes);
-        })
+        });
     },
 
     getAllUsers: function(req, res, next) {
@@ -67,7 +67,7 @@ module.exports = {
         }).exec(function(err, dbRes) {
             if (err) res.status(500).json(err);
             res.status(200).json(dbRes);
-        })
+        });
     },
 
     update: function(req, res, next) {
