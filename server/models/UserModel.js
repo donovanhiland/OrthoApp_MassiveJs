@@ -37,9 +37,9 @@ var userSchema = new Schema({
     phoneNumber: {
       type: String
     },
-    documents: {
-        type: Array
-    },
+    // documents: {
+    //     type: Array
+    // },
     financial: {
         initialbalance: {
             type: Number
@@ -58,14 +58,14 @@ var userSchema = new Schema({
         type: String,
         default: 'pending'
     },
-    appointment: {
-      type: Schema.Types.ObjectId,
-      ref: 'Appointments'
-    },
-    notes: [{
-      type: Schema.Types.ObjectId,
-      ref: 'Note'
-    }]
+    // appointment: {
+    //   type: Schema.Types.ObjectId,
+    //   ref: 'Appointments'
+    // },
+    // notes: [{
+    //   type: Schema.Types.ObjectId,
+    //   ref: 'Note'
+    // }]
 });
 
 userSchema.pre('save', function(next) {

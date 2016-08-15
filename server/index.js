@@ -47,13 +47,6 @@ const massiveInstance = massive.connectSync({
 });
 app.set('db', massiveInstance);
 let db = app.get('db');
-// console.log(db);
-// db.orthotest.find({
-//   // type: 'dog',
-//   'description like': 'scary%'
-// }, function(err, result) {
-//   console.log(result);
-// });
 
 app.use(express.static(__dirname + './../public'));
 app.use(session({
